@@ -1,14 +1,15 @@
+require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 const promClient = require("prom-client");
-const winston = require("winston");
+const winston = require("../project-log-new/node_modules/winston");
 const LokiTransport = require("winston-loki");
 
 const loggerTransports = [
   new winston.transports.Console({
     format: winston.format.combine(
       winston.format.colorize(), // Add colors for better readability in the console
-      winston.format.simple() // Simplified format for console output
+      winston.format.simple(), // Simplified format for console output
     ),
   }),
   new winston.transports.File({
@@ -31,7 +32,7 @@ if (process.env.LOKI_HOST) {
       json: true,
       format: winston.format.json(),
       replaceTimestamp: true,
-    })
+    }),
   );
 }
 
@@ -40,7 +41,7 @@ const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || "info", // Default log level
   format: winston.format.combine(
     winston.format.timestamp(),
-    winston.format.json() // Use JSON format for production logs
+    winston.format.json(), // Use JSON format for production logs
   ),
   transports: loggerTransports,
 });
@@ -58,8 +59,8 @@ app.use(
       stream: {
         write: (message) => logger.info(message.trim()), // Pass morgan logs to winston
       },
-    }
-  )
+    },
+  ),
 );
 
 promClient.collectDefaultMetrics({ register });
