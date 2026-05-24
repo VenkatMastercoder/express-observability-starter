@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 const promClient = require("prom-client");
-const winston = require("../project-log-new/node_modules/winston");
+const winston = require("winston");
 const LokiTransport = require("winston-loki");
 
 const loggerTransports = [
